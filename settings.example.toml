@@ -1,0 +1,6 @@
+###########################################
+# TOKEN  | string | The Discord bot TOKEN #
+# APP_ID | string | The Discrod bot ID    #
+###########################################
+TOKEN="some-given-disord-token"
+APP_ID="0123456789"
