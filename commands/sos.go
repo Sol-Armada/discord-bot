@@ -7,25 +7,10 @@ import (
 // Sos command handler
 func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseModal,
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			CustomID: "modal_test",
-			Title:    "test",
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						discordgo.TextInput{
-							CustomID:    "test",
-							Label:       "test?",
-							Style:       discordgo.TextInputShort,
-							Placeholder: "test",
-							Required:    true,
-							MaxLength:   300,
-							MinLength:   10,
-						},
-					},
-				},
-			},
+			Title:   "test",
+			Content: "TEST",
 		},
 	}); err != nil {
 		panic(err)

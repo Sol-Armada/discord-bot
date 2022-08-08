@@ -6,16 +6,16 @@ import (
 	"github.com/apex/log"
 	"github.com/bwmarrin/discordgo"
 	"github.com/sol-armada/discord-bot-go-template/bot"
+	"github.com/sol-armada/discord-bot-go-template/settings"
 	"github.com/sol-armada/discord-bot-go-template/starmap"
-	"github.com/spf13/viper"
 )
 
 func main() {
 	// get the settings
-	viper.SetConfigName("settings")
-	viper.AddConfigPath(".")
+	settings.SetConfigName("settings")
+	settings.AddConfigPath(".")
 
-	err := viper.ReadInConfig()
+	err := settings.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
@@ -24,7 +24,7 @@ func main() {
 		panic(err)
 	}
 
-	appId := viper.GetString("APP_ID")
+	appId := settings.GetString("APP_ID")
 
 	//TODO: Get version and build
 	logger := log.WithFields(log.Fields{
@@ -32,7 +32,7 @@ func main() {
 	})
 
 	// create a discrod session
-	discord, err := discordgo.New(fmt.Sprintf("Bot %s", viper.GetString("TOKEN")))
+	discord, err := discordgo.New(fmt.Sprintf("Bot %s", settings.GetString("TOKEN")))
 	if err != nil {
 		panic(err)
 	}

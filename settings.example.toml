@@ -4,3 +4,17 @@
 ###########################################
 TOKEN="some-given-disord-token"
 APP_ID="0123456789"
+
+#########################################################
+# SOS                                                   #
+# ENABLED    | Bool   | To enable the SOS channel       #
+# CHANNEL_ID | string | The ID of the SOS channel. If   #
+#                     | blank, the bot will create one  #
+#                     | or use the channel named        #
+#                     | CHANNEL_NAME      if found      #
+# CHANNEL_NAME | string | Name of the SOS channel.      #
+#                       | defaults to `✚-emergency-sos` #
+#########################################################
+[SOS]
+ENABLED=true
+CHANNEL_ID=""
