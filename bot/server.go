@@ -130,7 +130,7 @@ func (s *Server) Start(o *Options) error {
 
 	// catch the kill signal for a clean shutdown
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill) // nolint:staticcheck
 	<-stop
 	logger.Info("Bot is shutting down")
 
