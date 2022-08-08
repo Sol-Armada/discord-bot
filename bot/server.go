@@ -9,12 +9,14 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/pkg/errors"
 	"github.com/sol-armada/discord-bot-go-template/commands"
+	"github.com/sol-armada/discord-bot-go-template/modals"
 	"github.com/sol-armada/discord-bot-go-template/settings"
 	"github.com/spf13/viper"
 )
 
 type Server struct {
 	SOSChannel string
+	SOSMessage string
 
 	Sess   *discordgo.Session
 	Logger *log.Entry
@@ -36,6 +38,11 @@ func (s *Server) Start(o *Options) error {
 	// register the available components
 	components := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){}
 
+	// register the available modals
+	modals := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"sos": modals.Sos,
+	}
+
 	sess.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		logger.Info("Bot Ready")
 	})
@@ -48,6 +55,10 @@ func (s *Server) Start(o *Options) error {
 			}
 		case discordgo.InteractionMessageComponent:
 			if h, ok := components[i.MessageComponentData().CustomID]; ok {
+				h(s, i)
+			}
+		case discordgo.InteractionModalSubmit:
+			if h, ok := modals[i.ModalSubmitData().CustomID]; ok {
 				h(s, i)
 			}
 		}

@@ -43,6 +43,7 @@ type Container struct {
 }
 
 var Containers map[string]*Container = map[string]*Container{}
+var Keys []string = []string{}
 
 func Load() error {
 	jf, err := os.Open("./database.json")
@@ -71,6 +72,10 @@ func Load() error {
 		}
 
 		Containers[c.Name] = c
+	}
+
+	for k := range Containers {
+		Keys = append(Keys, k)
 	}
 
 	return nil
