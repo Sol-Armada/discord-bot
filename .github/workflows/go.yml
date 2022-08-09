@@ -2,11 +2,27 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+    - 'v*'
 
 jobs:
+  setup-release:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Create release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ fgithub.ref }}
+        draft: false
+        prerelease: false
+
   build-linux:
     strategy:
       matrix: 
@@ -21,5 +37,5 @@ jobs:
     - name: Build
       env:
         GOOS: linux
-        GOARCH: ${{ matric.arch }}
-      run: go build -o ./bin/linux-${{ matric-arch }}/sc-bot ./cmd/
+        GOARCH: ${{ matrix.arch }}
+      run: go build -o ./bin/linux-${{ matrix.arch }}/sc-bot ./cmd/
