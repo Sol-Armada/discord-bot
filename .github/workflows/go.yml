@@ -39,7 +39,7 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: sc-bot
-        path: "*.tar.gz"
+        path: "./"
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
