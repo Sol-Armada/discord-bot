@@ -27,7 +27,7 @@ jobs:
         tar -czvf sc-bot-linux-${{ matrix.arch }}.tar.gz ./sc-bot ./CHANGELOG.md ./README.md ./settings.example.toml
     - uses: actions/upload-artifact@master
       with:
-        name: sc-bot-linux-${{ matrix.arch }}.tar.gz
+        name: sc-bot
         path: ./sc-bot-linux-${{ matrix.arch }}.tar.gz
 
   setup-release:
@@ -37,6 +37,9 @@ jobs:
       contents: write
     steps:
     - uses: actions/download-artifact@master
+      with:
+        name: sc-bot
+        path: "*.tar.gz"
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
