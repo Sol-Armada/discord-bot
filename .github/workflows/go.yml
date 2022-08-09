@@ -39,3 +39,15 @@ jobs:
         GOOS: linux
         GOARCH: ${{ matrix.arch }}
       run: go build -o ./bin/linux-${{ matrix.arch }}/sc-bot ./cmd/
+    - name: Package
+      run: |
+        tar -czvf ./bin/linux-${{ matrix.arch }}-sc-bot.tar.gz ./bin/linux-${{ matrix.arch }}/sc-bot ./CHANGELOG.md ./README.md ./settings.example.toml
+    - name: Upload artifacts
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ needs.build-linux.outputs.url }}
+        asset_path: ./bin/linux-${{ matrix.arch }}-sc-bot.tar.gz
+        asset_name: sc-bot-linux-${{ matrix.arch }}.tar.gz
+        asset_content_type: application/gzip
