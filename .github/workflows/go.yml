@@ -36,4 +36,4 @@ jobs:
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "./bin/*.tar.gz"
+        artifacts: "bin/*.tar.gz"
