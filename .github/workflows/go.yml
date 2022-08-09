@@ -24,7 +24,7 @@ jobs:
       run: go build -o ./sc-bot ./cmd/
     - name: Package
       run: |
-        tar -czvf sc-bot-linux-${{ matrix.arch }}.tar.gz sc-bot CHANGELOG.md README.md settings.example.toml
+        tar -czvf sc-bot-linux-${{ matrix.arch }}.tar.gz sc-bot CHANGELOG.md README.md settings.example.toml database.json
     - uses: actions/upload-artifact@master
       with:
         name: sc-bot
