@@ -25,6 +25,9 @@ jobs:
     - name: Package
       run: |
         tar -czvf sc-bot-linux-${{ matrix.arch }}.tar.gz ./sc-bot ./CHANGELOG.md ./README.md ./settings.example.toml
+    - uses: actions/upload-artifact@master
+      with:
+        name: sc-bot-linux-${{ matrix.arch }}.tar.gz
 
   setup-release:
     runs-on: ubuntu-latest
@@ -32,7 +35,7 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@master
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
