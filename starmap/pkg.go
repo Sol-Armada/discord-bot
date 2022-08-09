@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type POI struct {
@@ -79,4 +80,12 @@ func Load() error {
 	}
 
 	return nil
+}
+
+func KeysUpper() []string {
+	r := []string{}
+	for _, v := range Keys {
+		r = append(r, strings.ToUpper(v))
+	}
+	return r
 }

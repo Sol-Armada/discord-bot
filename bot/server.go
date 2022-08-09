@@ -3,12 +3,14 @@ package bot
 import (
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/apex/log"
 	"github.com/bwmarrin/discordgo"
 	"github.com/pkg/errors"
 	"github.com/sol-armada/discord-bot-go-template/commands"
+	componenets "github.com/sol-armada/discord-bot-go-template/components"
 	"github.com/sol-armada/discord-bot-go-template/modals"
 	"github.com/sol-armada/discord-bot-go-template/settings"
 	"github.com/spf13/viper"
@@ -36,7 +38,12 @@ func (s *Server) Start(o *Options) error {
 	}
 
 	// register the available components
-	components := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){}
+	components := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"on-my-way":       componenets.OnMyWay,
+		"cancel-rescue":   componenets.CancelRescue,
+		"failed-rescue":   componenets.FailedRescue,
+		"cancel-response": componenets.CancelResponse,
+	}
 
 	// register the available modals
 	modals := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
@@ -56,6 +63,21 @@ func (s *Server) Start(o *Options) error {
 		case discordgo.InteractionMessageComponent:
 			if h, ok := components[i.MessageComponentData().CustomID]; ok {
 				h(s, i)
+			}
+
+			// very custom components
+			cid := i.MessageComponentData().CustomID
+			if strings.HasPrefix(cid, "on-my-way") {
+				components["on-my-way"](s, i)
+			}
+			if strings.HasPrefix(cid, "cancel-rescue") {
+				components["cancel-rescue"](s, i)
+			}
+			if strings.HasPrefix(cid, "failed-rescue") {
+				components["failed-rescue"](s, i)
+			}
+			if strings.HasPrefix(cid, "cancel-response") {
+				components["cancel-response"](s, i)
 			}
 		case discordgo.InteractionModalSubmit:
 			if h, ok := modals[i.ModalSubmitData().CustomID]; ok {

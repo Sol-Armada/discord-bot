@@ -2,6 +2,7 @@ package modals
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/lithammer/fuzzysearch/fuzzy"
@@ -10,9 +11,10 @@ import (
 )
 
 func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
-
+	// check that the location is a known one
 	where := i.ModalSubmitData().Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value
-	whereMatch := fuzzy.Find(where, starmap.Keys)
+	keys := starmap.KeysUpper()
+	whereMatch := fuzzy.Find(strings.ToUpper(where), keys)
 
 	if len(whereMatch) == 0 {
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -47,6 +49,14 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 							Name:  "Where",
 							Value: whereMatch[0],
 						},
+						{
+							Name:  "Responder",
+							Value: "No responder yet",
+						},
+						{
+							Name:  "Status",
+							Value: "Open",
+						},
 					},
 				},
 			},
@@ -54,8 +64,8 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.Button{
-							CustomID: fmt.Sprintf("on-my-way-%s", sosID),
-							Label:    "On my way!",
+							CustomID: fmt.Sprintf("on-my-way:%s", sosID),
+							Label:    "✚ On my way! ✚",
 						},
 					},
 				},
@@ -66,16 +76,15 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	_, err := s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
-		Content: "Click the button below if you no longer need a rescue or you died",
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						CustomID: fmt.Sprintf("cancel-rescue-%s", sosID),
+						CustomID: fmt.Sprintf("cancel-rescue:%s", sosID),
 						Label:    "Cancel",
 					},
 					discordgo.Button{
-						CustomID: fmt.Sprintf("failed-rescue-%s", sosID),
+						CustomID: fmt.Sprintf("failed-rescue:%s", sosID),
 						Label:    "Died",
 					},
 				},
