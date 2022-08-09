@@ -21,10 +21,10 @@ jobs:
       env:
         GOOS: linux
         GOARCH: ${{ matrix.arch }}
-      run: go build -o ./bin/linux-${{ matrix.arch }}/sc-bot ./cmd/
+      run: go build -o ./sc-bot ./cmd/
     - name: Package
       run: |
-        tar -czvf ./bin/sc-bot-linux-${{ matrix.arch }}.tar.gz ./bin/linux-${{ matrix.arch }}/sc-bot ./CHANGELOG.md ./README.md ./settings.example.toml
+        tar -czvf sc-bot-linux-${{ matrix.arch }}.tar.gz ./sc-bot ./CHANGELOG.md ./README.md ./settings.example.toml
 
   setup-release:
     runs-on: ubuntu-latest
@@ -36,4 +36,4 @@ jobs:
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "bin/*.tar.gz"
+        artifacts: "*.tar.gz"
