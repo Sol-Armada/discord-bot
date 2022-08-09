@@ -34,6 +34,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Create release
-      uses: actions/release-action@v1
+      uses: ncipollo/release-action@v1
       with:
         artifacts: "./bin/*.tar.gz"
