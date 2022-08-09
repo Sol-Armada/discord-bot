@@ -28,7 +28,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: sc-bot-linux-${{ matrix.arch }}.tar.gz
-        path: ./
+        path: ./sc-bot-linux-${{ matrix.arch }}.tar.gz
 
   setup-release:
     runs-on: ubuntu-latest
