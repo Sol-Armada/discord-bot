@@ -2,7 +2,6 @@ package modals
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/lithammer/fuzzysearch/fuzzy"
@@ -13,8 +12,7 @@ import (
 func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// check that the location is a known one
 	where := i.ModalSubmitData().Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value
-	keys := starmap.KeysUpper()
-	whereMatch := fuzzy.Find(strings.ToUpper(where), keys)
+	whereMatch := fuzzy.FindFold(where, starmap.Keys)
 
 	if len(whereMatch) == 0 {
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
