@@ -13,5 +13,10 @@ A bot for Sol Armada. This bot handles basic commands and one-off specific tasks
   - [x] Call command
   - [x] Keep a history of calls
   - [ ] Get list of call history
+- [ ] Bank
+  - [ ] Transaction command
+  - [ ] Bank total command
+  - [ ] Transaction history
+  - [ ] Channel with bank total and history
 - [ ] Misc
   - [x] Flat DB of Star Citizen locations
