@@ -23,16 +23,16 @@ const (
 )
 
 type Sos struct {
-	ID          string    `json:"id"`
-	ChannelID   string    `json:"channel_id"`
-	MessageID   string    `json:"message_id"`
-	PlayerID    string    `json:"player_id"`
-	MedicID     string    `json:"medic_id"`
-	Where       string    `json:"where"`
-	CallTime    time.Time `json:"call_time"`
-	RespondTime time.Time `json:"respond_time"`
-	RescuedTime time.Time `json:"rescued_time"`
-	Status      status    `json:"status"`
+	ID          string     `json:"id"`
+	ChannelID   string     `json:"channel_id"`
+	MessageID   string     `json:"message_id"`
+	PlayerID    string     `json:"player_id"`
+	ResponderID string     `json:"responder_id"`
+	Where       string     `json:"where"`
+	CallTime    *time.Time `json:"call_time"`
+	RespondTime *time.Time `json:"respond_time"`
+	RescuedTime *time.Time `json:"rescued_time"`
+	Status      status     `json:"status"`
 
 	ctx context.Context
 }
@@ -62,13 +62,14 @@ func init() {
 	}
 }
 
-func New(i *discordgo.Interaction, where string) string {
+func New(i *discordgo.Interaction, where string) *Sos {
+	now := time.Now().UTC()
 	call := &Sos{
 		ID:        xid.New().String(),
 		ChannelID: i.ChannelID,
 		PlayerID:  i.Member.User.ID,
 		Where:     where,
-		CallTime:  time.Now().UTC(),
+		CallTime:  &now,
 
 		Status: Open,
 
@@ -80,7 +81,7 @@ func New(i *discordgo.Interaction, where string) string {
 
 	call.Store()
 
-	return call.ID
+	return call
 }
 
 func GetCalls() map[string]*Sos {
@@ -116,8 +117,9 @@ func (s *Sos) StartCountDown() {
 }
 
 func (s *Sos) OnTheWay(m *discordgo.Member) {
-	s.MedicID = m.User.ID
-	s.RespondTime = time.Now().UTC()
+	now := time.Now().UTC()
+	s.ResponderID = m.User.ID
+	s.RespondTime = &now
 	s.Status = Responded
 
 	s.Store()
@@ -130,14 +132,22 @@ func (s *Sos) Canceled() {
 }
 
 func (s *Sos) Rescued() {
+	now := time.Now().UTC()
 	s.Status = Rescued
-	s.RescuedTime = time.Now().UTC()
+	s.RescuedTime = &now
 
 	s.Store()
 }
 
 func (s *Sos) Failed() {
 	s.Status = Failed
+
+	s.Store()
+}
+
+func (s *Sos) ClearResponder() {
+	s.ResponderID = ""
+	s.RespondTime = nil
 
 	s.Store()
 }

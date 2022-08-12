@@ -28,70 +28,70 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	// create the sos call
-	sosID := sos.New(i.Interaction, whereMatch[0])
+	call := sos.New(i.Interaction, whereMatch[0])
 
-	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			CustomID: "sos",
-			Content:  "Rescue needed!",
-			Embeds: []*discordgo.MessageEmbed{
-				{
-					Title: "Rescue Information",
-					Fields: []*discordgo.MessageEmbedField{
-						{
-							Name:  "Who",
-							Value: i.Member.Mention(),
-						},
-						{
-							Name:  "Where",
-							Value: whereMatch[0],
-						},
-						{
-							Name:  "Responder",
-							Value: "No responder yet",
-						},
-						{
-							Name:  "Status",
-							Value: "Open",
-						},
+	m, err := s.ChannelMessageSendComplex(i.ChannelID, &discordgo.MessageSend{
+		Content: "Rescue needed!",
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title: "Rescue Information",
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:  "Who",
+						Value: i.Member.Mention(),
 					},
-				},
-			},
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						discordgo.Button{
-							CustomID: fmt.Sprintf("on-my-way:%s", sosID),
-							Label:    "✚ On my way! ✚",
-						},
+					{
+						Name:  "Where",
+						Value: whereMatch[0],
+					},
+					{
+						Name:  "Responder",
+						Value: "No responder yet",
+					},
+					{
+						Name:  "Status",
+						Value: "Open",
 					},
 				},
 			},
 		},
-	}); err != nil {
-		panic(err)
-	}
-
-	_, err := s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						CustomID: fmt.Sprintf("cancel-rescue:%s", sosID),
-						Label:    "Cancel",
-					},
-					discordgo.Button{
-						CustomID: fmt.Sprintf("failed-rescue:%s", sosID),
-						Label:    "Died",
+						CustomID: fmt.Sprintf("on-my-way:%s", call.ID),
+						Label:    "✚ On my way! ✚",
 					},
 				},
 			},
 		},
-		Username: i.Member.User.Username,
-		Flags:    uint64(discordgo.MessageFlagsEphemeral),
 	})
 	if err != nil {
+		panic(err)
+	}
+
+	call.SetMessageID(m.ID)
+
+	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Components: []discordgo.MessageComponent{
+				discordgo.ActionsRow{
+					Components: []discordgo.MessageComponent{
+						discordgo.Button{
+							CustomID: fmt.Sprintf("cancel-rescue:%s", call.ID),
+							Label:    "Cancel",
+						},
+						discordgo.Button{
+							CustomID: fmt.Sprintf("failed-rescue:%s", call.ID),
+							Label:    "Died",
+						},
+					},
+				},
+			},
+			Flags: uint64(discordgo.MessageFlagsEphemeral),
+		},
+	}); err != nil {
 		panic(err)
 	}
 }

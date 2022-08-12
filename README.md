@@ -18,5 +18,6 @@ A bot for Sol Armada. This bot handles basic commands and one-off specific tasks
   - [ ] Bank total command
   - [ ] Transaction history
   - [ ] Channel with bank total and history
+  - [ ] Limit who can give to or take from the bank
 - [ ] Misc
   - [x] Flat DB of Star Citizen locations
