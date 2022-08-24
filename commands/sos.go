@@ -5,7 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/sol-armada/discord-bot-go-template/starmap"
+	"github.com/sol-armada/discord-bot/starmap"
 )
 
 // Sos command handler

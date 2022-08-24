@@ -9,7 +9,7 @@ import (
 	"github.com/apex/log"
 	"github.com/bwmarrin/discordgo"
 	"github.com/rs/xid"
-	"github.com/sol-armada/discord-bot-go-template/store"
+	"github.com/sol-armada/discord-bot/store"
 )
 
 type status string

@@ -1,11 +1,11 @@
-package componenets
+package components
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/sol-armada/discord-bot-go-template/sos"
+	"github.com/sol-armada/discord-bot/sos"
 )
 
 func OnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -17,7 +17,7 @@ func OnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
 				Content: "You can't respond to your own call!",
-				Flags:   uint64(discordgo.MessageFlagsEphemeral),
+				Flags:   discordgo.MessageFlagsEphemeral,
 			},
 		}); err != nil {
 			panic(err)
@@ -74,7 +74,7 @@ func OnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	_, err = s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
-		Flags: uint64(discordgo.MessageFlagsEphemeral),
+		Flags: discordgo.MessageFlagsEphemeral,
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{

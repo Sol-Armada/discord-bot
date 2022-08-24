@@ -1,10 +1,10 @@
-module github.com/sol-armada/discord-bot-go-template
+module github.com/sol-armada/discord-bot
 
 go 1.18
 
 require (
 	github.com/apex/log v1.9.0
-	github.com/bwmarrin/discordgo v0.25.0
+	github.com/bwmarrin/discordgo v0.26.0
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/lithammer/fuzzysearch v1.1.5
 	github.com/pkg/errors v0.9.1

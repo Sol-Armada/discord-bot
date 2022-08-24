@@ -5,8 +5,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/lithammer/fuzzysearch/fuzzy"
-	"github.com/sol-armada/discord-bot-go-template/sos"
-	"github.com/sol-armada/discord-bot-go-template/starmap"
+	"github.com/sol-armada/discord-bot/sos"
+	"github.com/sol-armada/discord-bot/starmap"
 )
 
 func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -18,7 +18,7 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Flags:   uint64(discordgo.MessageFlagsEphemeral),
+				Flags:   discordgo.MessageFlagsEphemeral,
 				Content: fmt.Sprintf("I could not find a location named '%s'. Please try again", where),
 			},
 		}); err != nil {
@@ -89,7 +89,7 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					},
 				},
 			},
-			Flags: uint64(discordgo.MessageFlagsEphemeral),
+			Flags: discordgo.MessageFlagsEphemeral,
 		},
 	}); err != nil {
 		panic(err)

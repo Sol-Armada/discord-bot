@@ -1,10 +1,10 @@
-package componenets
+package components
 
 import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/sol-armada/discord-bot-go-template/sos"
+	"github.com/sol-armada/discord-bot/sos"
 )
 
 func FailedRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {

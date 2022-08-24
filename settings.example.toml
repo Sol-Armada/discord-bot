@@ -18,3 +18,19 @@ APP_ID="0123456789"
 [SOS]
 ENABLED=true
 CHANNEL_ID=""
+CHANNEL_NAME=""
+
+#########################################################
+# BANK                                                  #
+# ENABLED      | bool   | To enable the bank feature    #
+# CHANNEL_ID   | string | The ID of the bank channel.   #
+#                       | If blank, the bot will create #
+#                       | one or use the channel named  #
+#                       | CHANNEL_NAME, if found        #
+# CHANNEL_NAME | string | Name of the bank channel      #
+#                       | defaults to `💳-org-bank`     #
+#########################################################
+[BANK]
+ENABLED=true
+CHANNEL_ID=""
+CHANNEL_NAME=""
