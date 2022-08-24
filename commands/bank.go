@@ -6,6 +6,7 @@ import (
 	"github.com/apex/log"
 	"github.com/bwmarrin/discordgo"
 	"github.com/sol-armada/discord-bot/bank"
+	"github.com/sol-armada/discord-bot/settings"
 )
 
 var subCommands = map[string]func(*discordgo.Session, *discordgo.InteractionCreate){
@@ -43,6 +44,24 @@ func balance(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 // Transaction sub command handler
 func transaction(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	buttons := []discordgo.MessageComponent{
+		discordgo.Button{
+			CustomID: "bank-to",
+			Label:    "To Org Bank",
+		},
+	}
+
+	whiteList := settings.GetStringList("BANK.WHITE_LIST")
+	for _, v := range whiteList {
+		if v == i.Member.User.ID {
+			buttons = append(buttons, discordgo.Button{
+				CustomID: "bank-from",
+				Label:    "From Org Bank",
+			})
+			break
+		}
+	}
+
 	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
@@ -51,14 +70,7 @@ func transaction(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Flags:    discordgo.MessageFlagsEphemeral,
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						discordgo.Button{
-							Label: "To Org Bank",
-						},
-						discordgo.Button{
-							Label: "From Org Bank",
-						},
-					},
+					Components: buttons,
 				},
 			},
 		},

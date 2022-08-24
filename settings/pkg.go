@@ -39,6 +39,10 @@ func GetStringWithDefault(k string, d string) string {
 	return settings.GetString(k)
 }
 
+func GetStringList(k string) []string {
+	return settings.GetStringSlice(k)
+}
+
 func GetBool(k string) bool {
 	return settings.GetBool(k)
 }

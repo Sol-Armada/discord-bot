@@ -7,7 +7,7 @@ import (
 	"github.com/sol-armada/discord-bot/sos"
 )
 
-func FailedRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func SosFailedRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	sosID := strings.Split(i.MessageComponentData().CustomID, ":")[1]
 	call := sos.GetSos(sosID)
 

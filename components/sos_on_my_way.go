@@ -8,7 +8,7 @@ import (
 	"github.com/sol-armada/discord-bot/sos"
 )
 
-func OnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func SosOnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	sosID := strings.Split(i.MessageComponentData().CustomID, ":")[1]
 	sos := sos.GetSos(sosID)
 	// can't response to you own call
@@ -79,7 +79,7 @@ func OnMyWay(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						CustomID: fmt.Sprintf("cancel-response:%s", sosID),
+						CustomID: fmt.Sprintf("sos-cancel-response:%s", sosID),
 						Label:    "Cancel",
 					},
 				},

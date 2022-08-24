@@ -59,7 +59,7 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						CustomID: fmt.Sprintf("on-my-way:%s", call.ID),
+						CustomID: fmt.Sprintf("sos-on-my-way:%s", call.ID),
 						Label:    "✚ On my way! ✚",
 					},
 				},
@@ -79,11 +79,11 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.Button{
-							CustomID: fmt.Sprintf("cancel-rescue:%s", call.ID),
+							CustomID: fmt.Sprintf("sos-cancel-rescue:%s", call.ID),
 							Label:    "Cancel",
 						},
 						discordgo.Button{
-							CustomID: fmt.Sprintf("failed-rescue:%s", call.ID),
+							CustomID: fmt.Sprintf("sos-failed-rescue:%s", call.ID),
 							Label:    "Died",
 						},
 					},

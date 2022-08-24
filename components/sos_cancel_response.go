@@ -7,14 +7,13 @@ import (
 	"github.com/sol-armada/discord-bot/sos"
 )
 
-func CancelRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func SosCancelResponse(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	sosID := strings.Split(i.MessageComponentData().CustomID, ":")[1]
 	call := sos.GetSos(sosID)
 
 	if call.Status == sos.Open || call.Status == sos.Responded {
-		call.Canceled()
+		call.ClearResponder()
 
-		// update the original sos message
 		edit := discordgo.NewMessageEdit(call.ChannelID, call.MessageID)
 		message, err := s.ChannelMessage(call.ChannelID, call.MessageID)
 		if err != nil {
@@ -22,7 +21,7 @@ func CancelRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 
 		b := message.Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.Button)
-		b.Disabled = true
+		b.Disabled = false
 		edit.Components = []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
@@ -44,11 +43,11 @@ func CancelRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					},
 					{
 						Name:  "Responder",
-						Value: message.Embeds[0].Fields[2].Value,
+						Value: "No reponder yet",
 					},
 					{
 						Name:  "Status",
-						Value: "Canceled",
+						Value: "Open",
 					},
 				},
 			},
@@ -64,13 +63,5 @@ func CancelRescue(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}); err != nil {
 			panic(err)
 		}
-
-		return
-	}
-
-	if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseDeferredMessageUpdate,
-	}); err != nil {
-		panic(err)
 	}
 }

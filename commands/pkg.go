@@ -19,6 +19,11 @@ var Bankcommands = []*discordgo.ApplicationCommand{
 				Description: "Get the org balance",
 				Type:        discordgo.ApplicationCommandOptionSubCommand,
 			},
+			{
+				Name:        "transaction",
+				Description: "Create a transaction",
+				Type:        discordgo.ApplicationCommandOptionSubCommand,
+			},
 		},
 	},
 }

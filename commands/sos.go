@@ -19,7 +19,7 @@ func Sos(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.TextInput{
-							CustomID:    "location",
+							CustomID:    "sos-location",
 							Label:       "Specify a location",
 							Style:       discordgo.TextInputShort,
 							Placeholder: fmt.Sprintf("Example: %s", starmap.Keys[rand.Intn(len(starmap.Keys))]),

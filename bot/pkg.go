@@ -46,10 +46,10 @@ func (b *Bot) Start(o *Options) error {
 
 	// available component handlers
 	componentHandlers := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"on-my-way":       components.OnMyWay,
-		"cancel-rescue":   components.CancelRescue,
-		"failed-rescue":   components.FailedRescue,
-		"cancel-response": components.CancelResponse,
+		"sos-on-my-way":       components.SosOnMyWay,
+		"sos-cancel-rescue":   components.SosCancelRescue,
+		"sos-failed-rescue":   components.SosFailedRescue,
+		"sos-cancel-response": components.SosCancelResponse,
 	}
 
 	// available modal hanlers
@@ -74,17 +74,17 @@ func (b *Bot) Start(o *Options) error {
 
 			// very custom components
 			cid := interaction.MessageComponentData().CustomID
-			if strings.HasPrefix(cid, "on-my-way") {
-				componentHandlers["on-my-way"](session, interaction)
+			if strings.HasPrefix(cid, "sos-on-my-way") {
+				componentHandlers["sos-on-my-way"](session, interaction)
 			}
-			if strings.HasPrefix(cid, "cancel-rescue") {
-				componentHandlers["cancel-rescue"](session, interaction)
+			if strings.HasPrefix(cid, "sos-cancel-rescue") {
+				componentHandlers["sos-cancel-rescue"](session, interaction)
 			}
-			if strings.HasPrefix(cid, "failed-rescue") {
-				componentHandlers["failed-rescue"](session, interaction)
+			if strings.HasPrefix(cid, "sos-failed-rescue") {
+				componentHandlers["sos-failed-rescue"](session, interaction)
 			}
-			if strings.HasPrefix(cid, "cancel-response") {
-				componentHandlers["cancel-response"](session, interaction)
+			if strings.HasPrefix(cid, "sos-cancel-response") {
+				componentHandlers["sos-cancel-response"](session, interaction)
 			}
 		case discordgo.InteractionModalSubmit:
 			if h, ok := modalHandlers[interaction.ModalSubmitData().CustomID]; ok {
@@ -153,8 +153,7 @@ func (b *Bot) Start(o *Options) error {
 
 			// register the commands with discord
 			for _, v := range commands.SosCommands {
-				_, err = b.sess.ApplicationCommandCreate(o.AppID, guild.ID, v)
-				if err != nil {
+				if _, err = b.sess.ApplicationCommandCreate(o.AppID, guild.ID, v); err != nil {
 					log.WithError(err).Error("could not enable SOS commands")
 					b.SOSChannel = ""
 				}
@@ -178,8 +177,7 @@ func (b *Bot) Start(o *Options) error {
 				channelID := viper.GetString("BANK.CHANNEL_ID")
 				if channelID != "" {
 					b.BankChannel = channelID
-					_, err := b.sess.Channel(channelID)
-					if err != nil {
+					if _, err := b.sess.Channel(channelID); err != nil {
 						done <- errors.Wrap(err, "configured channel not found")
 						return
 					}
@@ -192,7 +190,7 @@ func (b *Bot) Start(o *Options) error {
 				channelName := settings.GetStringWithDefault("BANK.CHANNEL_NAME", "💳-org-bank")
 				channels, err := b.sess.GuildChannels(guild.ID)
 				if err != nil {
-					done <- errors.Wrap(err, "could not get guild channels")
+					done <- errors.Wrap(err, "get guild channels")
 					return
 				}
 				for _, channel := range channels {
@@ -207,7 +205,7 @@ func (b *Bot) Start(o *Options) error {
 				// if we don't have anything, creat the channel
 				c, err := session.GuildChannelCreate(guild.ID, channelName, discordgo.ChannelTypeGuildText)
 				if err != nil {
-					done <- errors.Wrap(err, "could not create Bank channel")
+					done <- errors.Wrap(err, "create Bank channel")
 					return
 				}
 				b.SOSChannel = c.ID
@@ -216,22 +214,23 @@ func (b *Bot) Start(o *Options) error {
 
 			err := <-done
 			if err != nil {
-				log.WithError(err).Error("could not enable the Bank")
+				log.WithError(err).Error("enable Bank")
 				b.SOSChannel = ""
 				return
 			}
 
 			// register the commands with discord
 			for _, v := range commands.Bankcommands {
-				_, err = b.sess.ApplicationCommandCreate(o.AppID, guild.ID, v)
-				if err != nil {
-					log.WithError(err).Error("could not enable Bank commands")
+				if _, err = b.sess.ApplicationCommandCreate(o.AppID, guild.ID, v); err != nil {
+					log.WithError(err).Error("enable Bank commands")
 					b.SOSChannel = ""
 				}
 			}
 
 			// create the guild's bank
-			bank.GetBank(guild.ID)
+			if _, err = bank.GetBank(guild.ID); err != nil {
+				log.WithError(err).Error("get bank")
+			}
 		})
 	}
 

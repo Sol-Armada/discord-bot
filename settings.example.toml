@@ -22,15 +22,18 @@ CHANNEL_NAME=""
 
 #########################################################
 # BANK                                                  #
-# ENABLED      | bool   | To enable the bank feature    #
-# CHANNEL_ID   | string | The ID of the bank channel.   #
-#                       | If blank, the bot will create #
-#                       | one or use the channel named  #
-#                       | CHANNEL_NAME, if found        #
-# CHANNEL_NAME | string | Name of the bank channel      #
-#                       | defaults to `💳-org-bank`     #
+# ENABLED      | bool    | To enable the bank feature   #
+# CHANNEL_ID   | string  | The ID of the bank channel.  #
+#                        | If blank, the bot will create#
+#                        | one or use the channel named #
+#                        | CHANNEL_NAME, if found       #
+# CHANNEL_NAME | string  | Name of the bank channel     #
+#                        | defaults to `💳-org-bank`    #
+# WHITE_LIST   | lstring | A list of user IDs to allow  #
+#                        | transfering out of the bank  #
 #########################################################
 [BANK]
 ENABLED=true
 CHANNEL_ID=""
 CHANNEL_NAME=""
+WHITE_LIST=[]
