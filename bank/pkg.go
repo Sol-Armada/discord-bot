@@ -10,25 +10,24 @@ import (
 )
 
 type Bank struct {
-	Balance int64
-	Guild   string
+	Balance int64  `json:"balance"`
+	Guild   string `json:"guild"`
 
 	ctx context.Context
 }
 
-func GetBank(guild string) (*Bank, error) {
+func GetBank(guildId string) (*Bank, error) {
 	ctx := context.Background()
-	key := fmt.Sprintf("%s:bank", guild)
+	key := fmt.Sprintf("%s:bank", guildId)
 
-	b := &Bank{}
+	b := &Bank{
+		ctx: context.Background(),
+	}
 
 	// check if we already have this guild's bank
 	if !store.Exists(ctx, key) {
-		b = &Bank{
-			Balance: 0,
-			Guild:   guild,
-			ctx:     context.Background(),
-		}
+		b.Balance = 0
+		b.Guild = guildId
 		b.save()
 		return b, nil
 	}
@@ -49,12 +48,14 @@ func GetBank(guild string) (*Bank, error) {
 	return b, nil
 }
 
-func (b *Bank) GetBalance() float64 {
-	key := fmt.Sprintf("%s:bank", b.Guild)
+func (b *Bank) AddBalance(amount int64) {
+	b.Balance += amount
+	b.save()
+}
 
-	cmd := store.Client.Get(b.ctx, key)
-	_ = cmd
-	return 0
+func (b *Bank) RemoveBalance(amount int64) {
+	b.Balance -= amount
+	b.save()
 }
 
 func (b *Bank) save() {

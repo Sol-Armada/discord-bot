@@ -38,7 +38,7 @@ func balance(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Content: fmt.Sprintf("%daUEC", b.Balance),
 		},
 	}); err != nil {
-		panic(err)
+		log.WithError(err).Error("balance interaction response")
 	}
 }
 
@@ -75,6 +75,6 @@ func transaction(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			},
 		},
 	}); err != nil {
-		panic(err)
+		log.WithError(err).Error("balance transaction response")
 	}
 }

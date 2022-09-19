@@ -46,15 +46,19 @@ func (b *Bot) Start(o *Options) error {
 
 	// available component handlers
 	componentHandlers := map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"sos-on-my-way":       components.SosOnMyWay,
-		"sos-cancel-rescue":   components.SosCancelRescue,
-		"sos-failed-rescue":   components.SosFailedRescue,
-		"sos-cancel-response": components.SosCancelResponse,
+		"sos-on-my-way":              components.SosOnMyWay,
+		"sos-cancel-rescue":          components.SosCancelRescue,
+		"sos-failed-rescue":          components.SosFailedRescue,
+		"sos-cancel-response":        components.SosCancelResponse,
+		"bank-to":                    components.BankTo,
+		"bank-transaction-processed": components.BankTransactionProcessed,
+		"bank-transaction-canceled":  components.BankTransactionCancel,
 	}
 
 	// available modal hanlers
 	modalHandlers := map[string]func(session *discordgo.Session, i *discordgo.InteractionCreate){
-		"sos": modals.Sos,
+		"sos":           modals.Sos,
+		"bank-to-modal": modals.BankTo,
 	}
 
 	b.sess.AddHandler(func(session *discordgo.Session, r *discordgo.Ready) {
@@ -73,18 +77,9 @@ func (b *Bot) Start(o *Options) error {
 			}
 
 			// very custom components
-			cid := interaction.MessageComponentData().CustomID
-			if strings.HasPrefix(cid, "sos-on-my-way") {
-				componentHandlers["sos-on-my-way"](session, interaction)
-			}
-			if strings.HasPrefix(cid, "sos-cancel-rescue") {
-				componentHandlers["sos-cancel-rescue"](session, interaction)
-			}
-			if strings.HasPrefix(cid, "sos-failed-rescue") {
-				componentHandlers["sos-failed-rescue"](session, interaction)
-			}
-			if strings.HasPrefix(cid, "sos-cancel-response") {
-				componentHandlers["sos-cancel-response"](session, interaction)
+			cid := strings.Split(interaction.MessageComponentData().CustomID, ":")[0]
+			if h, ok := componentHandlers[cid]; ok {
+				h(session, interaction)
 			}
 		case discordgo.InteractionModalSubmit:
 			if h, ok := modalHandlers[interaction.ModalSubmitData().CustomID]; ok {
@@ -228,7 +223,7 @@ func (b *Bot) Start(o *Options) error {
 			}
 
 			// create the guild's bank
-			if _, err = bank.GetBank(guild.ID); err != nil {
+			if _, err := bank.GetBank(guild.ID); err != nil {
 				log.WithError(err).Error("get bank")
 			}
 		})

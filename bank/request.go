@@ -10,20 +10,12 @@ import (
 	"github.com/sol-armada/discord-bot/store"
 )
 
-type RequestStatus string
-
-const (
-	Request_PENDING   RequestStatus = "pending"
-	Request_ACCEPTED  RequestStatus = "accepted"
-	Request_PROCESSED RequestStatus = "processed"
-	Request_DENIED    RequestStatus = "denied"
-)
-
 type Request struct {
 	Bank        *Bank        `json:"bank"`
 	ID          string       `json:"id"`
 	Amount      float64      `json:"amount"`
 	SubmittedBy string       `json:"submitted_by"`
+	Status      status       `json:"status"`
 	AcceptedBy  string       `json:"accepted_by"`
 	Reason      string       `json:"reason"`
 	DenyReason  string       `json:"deny_reason"`

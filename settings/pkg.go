@@ -43,6 +43,17 @@ func GetStringList(k string) []string {
 	return settings.GetStringSlice(k)
 }
 
+func IsInStringList(k string, v string) bool {
+	l := GetStringList(k)
+	for _, s := range l {
+		if s == v {
+			return true
+		}
+	}
+
+	return false
+}
+
 func GetBool(k string) bool {
 	return settings.GetBool(k)
 }
